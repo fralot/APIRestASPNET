@@ -119,11 +119,6 @@ namespace APIRest.Services
             }
         }
 
-        private string GetSecretKey()
-        {
-            return _configuration["JwtSettings:SecretKey"];
-        }
-
         public async Task<string> GenerateJwtTokenAsync(string email, string role)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");

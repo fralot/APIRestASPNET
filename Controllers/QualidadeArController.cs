@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace APIRest.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
     public class QualidadeArController : Controller
     {
         private readonly DatabaseContext _context;

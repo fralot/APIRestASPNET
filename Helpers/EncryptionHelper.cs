@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 
 namespace APIRest.Helpers

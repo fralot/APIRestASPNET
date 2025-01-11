@@ -1,6 +1,6 @@
-namespace APIRest
+namespace APIRest.Models
 {
-    public class WeatherForecast
+    public class WeatherForecastModel
     {
         public DateOnly Date { get; set; }
 

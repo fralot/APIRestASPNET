@@ -2,7 +2,6 @@
 using APIRest.Helpers;
 using APIRest.Models;
 using APIRest.Services;
-using Microsoft.Extensions.Logging;
 
 namespace APIRest.Controllers
 {
@@ -26,8 +25,7 @@ namespace APIRest.Controllers
             }
             // Encriptar la contraseña con sal aleatoria
             var (hash, salt) = EncryptionHelper.HashPassword(user.Password);
-            //var test = EncryptionHelper.test(user.Password);
-            //return Ok(salt);
+            
             // Guardar el usuario en la base de datos con el hash y la sal
             await _userService.AddUserAsync(user.Email, hash, salt, user.Role);
 
@@ -43,7 +41,6 @@ namespace APIRest.Controllers
                 Expires = DateTimeOffset.UtcNow.AddMinutes(60)
             });
 
-            //return Ok();
             return new OkObjectResult(new { token = token });
         }
     }

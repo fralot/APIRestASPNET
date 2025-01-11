@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIRest.Models;
 using APIRest.Services;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http.HttpResults;
 using APIRest.Helpers;
 
 namespace APIRest.Controllers
