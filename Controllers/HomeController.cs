@@ -28,6 +28,39 @@ namespace APIRest.Controllers
             return Ok(new { id = id, message = $"You requested item with ID: {id}" });
         }
 
+        [HttpGet("GetSomethingUserRole")]
+        [Authorize(Roles = "USER")]
+        public IActionResult GetSomethingUserRole(int id)
+        {
+            // Recuperar email y rol del usuario autenticado
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            return Ok(new
+            {
+                id = id,
+                email = email,
+                role = role,
+                message = $"You requested item with ID: {id} as a USER."
+            });
+        }
+
+        [HttpGet("GetSomethingAdminRole")]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GetSomethingAdminRole(int id)
+        {
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            return Ok(new
+            {
+                id = id,
+                email = email,
+                role = role,
+                message = $"You requested item with ID: {id} as an ADMIN."
+            });
+        }
+
         [HttpPost] // Ejemplo de acción que responde a POST
         public IActionResult PostData([FromBody] SomeData data) // [FromBody] para datos en el cuerpo de la petición
         {
