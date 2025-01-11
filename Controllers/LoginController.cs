@@ -39,20 +39,9 @@ namespace APIRest.Controllers
             }
 
             var userRole = await _userService.GetUserRoleAsync(user.Email, user.Password);
-            //var userRole = "admin";
             if (!string.IsNullOrEmpty(userRole))
             {
                 var token = await _userService.GenerateJwtTokenAsync(user.Email, userRole);
-
-                HttpContext.Response.Cookies.Append("BearerToken", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(60)
-                });
-
-                //return Ok();
                 return new OkObjectResult( new { token = token});
             }
             else
