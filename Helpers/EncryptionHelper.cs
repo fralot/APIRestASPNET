@@ -43,19 +43,5 @@ namespace APIRest.Helpers
             // Comparar el hash generado con el almacenado
             return hash == storedHash;
         }
-
-
-        public static (string Hash, string Salt) test(string password)
-        {
-            var (hast, salt) = HashPassword(password);
-            Console.WriteLine(hast, salt);
-            var isValid = VerifyPassword(password, hast, salt);
-            Console.WriteLine(isValid);
-
-
-            return (Hash: password, Salt: salt);
-        }
-
-
     }
 }
