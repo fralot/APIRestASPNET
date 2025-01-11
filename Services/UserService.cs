@@ -126,24 +126,30 @@ namespace APIRest.Services
 
         public async Task<string> GenerateJwtTokenAsync(string email, string role)
         {
-            var secretKey = Encoding.UTF8.GetBytes(GetSecretKey());
-            var signingKey = new SymmetricSecurityKey(secretKey);
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+            var issuer = jwtSettings["Issuer"];
+            var audience = jwtSettings["Audience"];
+            var expiresInMinutes = int.Parse(jwtSettings["ExpiresInMinutes"]);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var claims = new[]
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role)
-            }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
-            };
+            new Claim(JwtRegisteredClaimNames.Sub, email),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256);
 
-            return tokenHandler.WriteToken(token);
+            var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(expiresInMinutes),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
