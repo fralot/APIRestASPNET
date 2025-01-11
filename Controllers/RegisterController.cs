@@ -21,8 +21,21 @@ namespace APIRest.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Retorna errores de validación
+                // Retornar todas las validaciones que no se cumplieron
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new { Message = "Errores de validación.", Errors = errors });
             }
+
+            var existingUser = await _userService.GetUserByEmailAsync(user.Email);
+            if (existingUser != null)
+            {
+                return BadRequest(new { Message = "El email ya está en uso." });
+            }
+
             // Encriptar la contraseña con sal aleatoria
             var (hash, salt) = EncryptionHelper.HashPassword(user.Password);
             
@@ -32,14 +45,6 @@ namespace APIRest.Controllers
             //return Ok(new { Message = "Registro exitoso." });
 
             var token = await _userService.GenerateJwtTokenAsync(user.Email, user.Role);
-
-            HttpContext.Response.Cookies.Append("BearerToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(60)
-            });
 
             return new OkObjectResult(new { token = token });
         }
