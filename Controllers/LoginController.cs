@@ -10,10 +10,10 @@ namespace APIRest.Controllers
     [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userService;
         private readonly IJWTHelper _jwtHelper;
 
-        public LoginController(IUserService userService, IJWTHelper jwtHelper)
+        public LoginController(IUserRepository userService, IJWTHelper jwtHelper)
         {
             _userService = userService;
             _jwtHelper = jwtHelper;

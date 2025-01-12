@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace APIRest.Services
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<bool> ValidateUserAsync(string email, string password);
         Task<string> GetUserRoleAsync(string email, string password);

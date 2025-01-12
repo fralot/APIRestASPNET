@@ -4,11 +4,11 @@ using APIRest.Models;
 
 namespace APIRest.Services
 {
-    public class UserService: IUserService
+    public class UserRepository: IUserRepository
     {
         private readonly OracleDbHelper _dbHelper;
 
-        public UserService(OracleDbHelper dbHelper)
+        public UserRepository(OracleDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
