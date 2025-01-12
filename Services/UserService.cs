@@ -1,22 +1,16 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using APIRest.Helpers;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using APIRest.Models;
 
 namespace APIRest.Services
 {
-    public class UserService
+    public class UserService: IUserService
     {
         private readonly OracleDbHelper _dbHelper;
-        private readonly IConfiguration _configuration;
 
-        public UserService(OracleDbHelper dbHelper, IConfiguration configuration)
+        public UserService(OracleDbHelper dbHelper)
         {
             _dbHelper = dbHelper;
-            _configuration = configuration;
         }
 
         public async Task<bool> ValidateUserAsync(string email, string password)
@@ -117,34 +111,6 @@ namespace APIRest.Services
                     await command.ExecuteNonQueryAsync();
                 }
             }
-        }
-
-        public async Task<string> GenerateJwtTokenAsync(string email, string role)
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
-            var issuer = jwtSettings["Issuer"];
-            var audience = jwtSettings["Audience"];
-            var expiresInMinutes = int.Parse(jwtSettings["ExpiresInMinutes"]);
-
-            var claims = new[]
-            {
-            new Claim(JwtRegisteredClaimNames.Sub, email),
-            new Claim(ClaimTypes.Role, role),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expiresInMinutes),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

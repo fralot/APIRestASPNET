@@ -51,7 +51,8 @@ builder.Services.AddAuthorization();
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJWTHelper, JWTHelper>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

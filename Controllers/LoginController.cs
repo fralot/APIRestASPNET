@@ -10,11 +10,13 @@ namespace APIRest.Controllers
     [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
+        private readonly IJWTHelper _jwtHelper;
 
-        public LoginController(UserService userService)
+        public LoginController(IUserService userService, IJWTHelper jwtHelper)
         {
             _userService = userService;
+            _jwtHelper = jwtHelper;
         }
 
         [HttpPost]
@@ -39,7 +41,7 @@ namespace APIRest.Controllers
             var userRole = await _userService.GetUserRoleAsync(user.Email, user.Password);
             if (!string.IsNullOrEmpty(userRole))
             {
-                var token = await _userService.GenerateJwtTokenAsync(user.Email, userRole);
+                var token = await _jwtHelper.GenerateJwtTokenAsync(user.Email, userRole);
                 return new OkObjectResult( new { token = token});
             }
             else

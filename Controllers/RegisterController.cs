@@ -9,11 +9,13 @@ namespace APIRest.Controllers
     [Route("api/[controller]")]
     public class RegisterController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
+        private readonly IJWTHelper _jwtHelper;
 
-        public RegisterController(UserService userService)
+        public RegisterController(IUserService userService, IJWTHelper jwtHelper)
         {
             _userService = userService;
+            _jwtHelper = jwtHelper;
         }
 
         [HttpPost]
@@ -44,7 +46,7 @@ namespace APIRest.Controllers
 
             //return Ok(new { Message = "Registro exitoso." });
 
-            var token = await _userService.GenerateJwtTokenAsync(user.Email, user.Role);
+            var token = await _jwtHelper.GenerateJwtTokenAsync(user.Email, user.Role);
 
             return new OkObjectResult(new { token = token });
         }
